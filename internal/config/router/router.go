@@ -3,6 +3,7 @@ package router
 import (
 	"backend/database"
 	userController "backend/internal/module/user/controller"
+	"backend/pkg/logger"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,7 @@ func InitializeRouter() {
 	router.Use(corsHeaderConfig())
 	router.Use(corsConfig())
 	router.Use(rateLimiterConfig())
+	router.Use(logger.DiscordLogger())
 
 	routerInstance = router
 

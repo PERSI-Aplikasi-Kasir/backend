@@ -24,6 +24,7 @@ var (
 	MailerEmail       string
 	MailerPassword    string
 	ResetPWFEEndpoint string
+	DiscordWebhookUrl string
 )
 
 func InitializeEnv() {
@@ -48,6 +49,7 @@ func InitializeEnv() {
 	MailerEmail = os.Getenv("MAILER_EMAIL")
 	MailerPassword = os.Getenv("MAILER_PASSWORD")
 	ResetPWFEEndpoint = os.Getenv("RESETPW_FE_ENDPOINT")
+	DiscordWebhookUrl = os.Getenv("DISCORD_WEBHOOK_URL")
 
 	fmt.Println("✓ .env initialized")
 }
