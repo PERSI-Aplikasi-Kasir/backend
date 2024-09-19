@@ -21,8 +21,8 @@ start-win:
 	dist/bin.exe
 
 start-linux:
-	./dist
+	./dist/bin
 
 deploy:
 	go build -o dist/bin ./cmd/bin
-	./dist
+	./dist/bin
