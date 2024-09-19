@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog/log"
 )
 
 var tagMessages = map[string]string{
@@ -70,7 +71,10 @@ func requestValidator(c *gin.Context, req interface{}, validatorType string) err
 			}
 			handler.Error(c, http.StatusBadRequest, errorMessage, errors...)
 		}
+
+		log.Error().Err(err).Msg("Data tidak valid")
 		return err
 	}
+
 	return nil
 }

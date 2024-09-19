@@ -3,6 +3,8 @@ package cmd
 import (
 	"backend/database"
 	"backend/database/migrations"
+	"backend/pkg/env"
+	"backend/pkg/logger"
 	"fmt"
 
 	"github.com/rs/zerolog/log"
@@ -11,6 +13,7 @@ import (
 func Migrate() {
 	fmt.Println("Running migration...")
 
+	logger.InitializeLogger(env.LogsPath + "migration.log")
 	database.InitializeDB()
 	db := database.GetDBInstance()
 	err := migrations.Migrate(db)
@@ -20,6 +23,5 @@ func Migrate() {
 	}
 
 	database.UnsyncDB()
-
-	fmt.Println("✓ Migration process finished")
+	log.Info().Msg("✓ Migration process finished")
 }

@@ -3,6 +3,7 @@ package cmd
 import (
 	"backend/microservices/logexposer"
 	"backend/pkg/env"
+	"backend/pkg/logger"
 	"fmt"
 	"net/http"
 
@@ -12,12 +13,12 @@ import (
 func LogExposer() {
 	fmt.Println("Running microservice: LogExposer")
 
+	logger.InitializeLogger(env.LogsPath + "logexposer.log")
 	logexposer.InitializeLogExposer()
 
-	if err := http.ListenAndServe(env.BEHost+":"+env.LoggerPort, nil); err != nil && err != http.ErrServerClosed {
-		fmt.Println("err")
-		fmt.Println(err)
-
+	err := http.ListenAndServe(env.BEHost+":"+env.LoggerPort, nil)
+	if err != nil && err != http.ErrServerClosed {
 		log.Fatal().Err(err).Msg("Microservice: LogExposer server failed to start")
+		panic(err)
 	}
 }

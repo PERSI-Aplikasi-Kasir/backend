@@ -34,7 +34,9 @@ var (
 	LogsPath          string
 
 	// Microservices
-	LoggerPort string
+	LoggerPort     string
+	WAClientPort   string
+	WAClientDBName string
 )
 
 func InitializeEnv() {
@@ -64,6 +66,8 @@ func InitializeEnv() {
 	DiscordWebhookUrl = os.Getenv("DISCORD_WEBHOOK_URL")
 	LogsPath = os.Getenv("LOGS_PATH")
 	LoggerPort = os.Getenv("LOGGER_PORT")
+	WAClientPort = os.Getenv("WACLIENT_PORT")
+	WAClientDBName = os.Getenv("WACLIENT_DB_NAME")
 
 	fmt.Println("✓ .env initialized")
 }

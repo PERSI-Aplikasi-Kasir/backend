@@ -1,8 +1,8 @@
 package router
 
 import (
-	"backend/database"
-	userController "backend/internal/module/user/controller"
+	"backend/microservices/whatsappclient/chore/controller"
+	"backend/microservices/whatsappclient/config"
 	"backend/pkg/logger"
 	"context"
 	"fmt"
@@ -35,9 +35,9 @@ func GetRouterInstance() *gin.Engine {
 func InitializeRoutes() {
 	fmt.Println("===== Initialize Routes =====")
 	router := GetRouterInstance()
-	db := database.GetDBInstance()
+	client := config.GetClient()
 
-	userController.NewUserController(db).Register(router)
+	controller.NewWhatsappController(client).Register(router)
 
 	fmt.Println("✓ Initialize", len(router.Routes()), "routes")
 }

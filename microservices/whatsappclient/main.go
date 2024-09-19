@@ -1,12 +1,11 @@
-package cmd
+package whatsappclient
 
 import (
-	"backend/database"
-	"backend/internal/config/router"
-	"backend/internal/integration/mailer"
+	"backend/microservices/whatsappclient/config"
+	"backend/microservices/whatsappclient/database"
+	"backend/microservices/whatsappclient/router"
 	"backend/pkg/env"
 	"backend/pkg/logger"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,27 +15,25 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func App() {
-	fmt.Println("Running app...")
-
-	logger.InitializeLogger(env.LogsPath + "app.log")
-	database.InitializeDB()
+func InitializeWhatsappClient() {
+	database.InitializeWAClientDB()
+	config.InitializeClient()
 	router.InitializeRouter()
 	router.InitializeRoutes()
-	mailer.InitializeMailer()
 
 	server := &http.Server{
-		Addr:    env.BEHost + ":" + env.BEPort,
+		Addr:    env.BEHost + ":" + env.WAClientPort,
 		Handler: router.GetRouterInstance(),
 	}
 
 	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal().Err(err).Msg("Server failed to start")
+		err := server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatal().Err(err).Msg("Whatsapp Client service failed to start")
 		}
 	}()
 
-	log.Info().Msgf("✓ App is running on %s:%s", env.BEHost, env.BEPort)
+	log.Info().Msgf("✓ Microservice: Whatsapp Client is running on %s:%s", env.BEHost, env.WAClientPort)
 	shutdownListener(server)
 }
 

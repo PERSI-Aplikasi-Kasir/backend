@@ -27,6 +27,7 @@ func (w ResponseWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
+// TODO: remove after development
 func DiscordLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if env.DiscordWebhookUrl == "" {
