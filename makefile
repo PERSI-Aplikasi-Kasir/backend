@@ -1,19 +1,6 @@
 dev:
 	cls
-	go run cmd/bin/main.go
-
-migrate:
-	cls
-	go run cmd/bin/main.go --migrate
-
-seed:
-	cls
-	go run cmd/bin/main.go --seed
-
-logexposer:
-	cls
-	go run cmd/bin/main.go --logexposer
-
+	go run cmd/bin/main.go --$(cmd)
 
 # Server
 build:
