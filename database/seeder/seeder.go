@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: Implement seeder
 func Seeder(db *gorm.DB) {
 	InitRole(db)
 	InitAdmin(db)

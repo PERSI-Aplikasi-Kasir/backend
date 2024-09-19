@@ -3,8 +3,9 @@ package mailer
 import (
 	"backend/internal/integration/mailer"
 	"fmt"
-	"log"
 	"net/smtp"
+
+	"github.com/rs/zerolog/log"
 )
 
 type MailInfo struct {
@@ -18,10 +19,9 @@ func SendMail(mailInfo MailInfo) {
 		mailerInstance := mailer.GetMailerInstance()
 		message := []byte(fmt.Sprintf("Subject: %s\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n%s\r\n", mailInfo.Subject, mailInfo.Body))
 
-		log.Println("Sending email to:", mailInfo.EmailTarget)
 		err := smtp.SendMail(mailerInstance.Server, mailerInstance.Auth, mailerInstance.From, mailInfo.EmailTarget, message)
 		if err != nil {
-			log.Println("Error sending email to:", mailInfo.EmailTarget, err)
+			log.Error().Err(err).Msgf("Error sending email to: %v", mailInfo.EmailTarget)
 			return
 		}
 	}()

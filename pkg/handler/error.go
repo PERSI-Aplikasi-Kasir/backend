@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type ApiError struct {
@@ -25,6 +26,8 @@ var errorResponsePool = sync.Pool{
 }
 
 func Error(c *gin.Context, status int, message string, errors ...ApiError) {
+	log.Error().Msg(message)
+
 	res := errorResponsePool.Get().(*ErrorResponseAPI)
 	res.Status = false
 	res.StatusCode = status

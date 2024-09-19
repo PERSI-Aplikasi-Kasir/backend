@@ -9,6 +9,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
+)
+
+var (
+	RATE_LIMITTED_DELAY = 1 * time.Second
+	RETRY_ATTEMPTS      = 10
 )
 
 type ResponseWriter struct {
@@ -65,11 +71,14 @@ func DiscordLogger() gin.HandlerFunc {
 			)
 		}
 
-		go sendToDiscord(logMessage)
+		go sendToDiscord(logMessage, 0)
 	}
 }
 
-func sendToDiscord(message string) {
+func sendToDiscord(message string, attempt int) {
+	maxAttempts := RETRY_ATTEMPTS
+	delay := RATE_LIMITTED_DELAY * time.Duration(1<<attempt)
+
 	webhookBody := map[string]string{
 		"content": message,
 	}
@@ -90,11 +99,30 @@ func sendToDiscord(message string) {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error sending log to Discord:", err)
+		if attempt < maxAttempts {
+			fmt.Printf("Retrying in %v...\n", delay)
+			time.Sleep(delay)
+			sendToDiscord(message, attempt+1)
+		} else {
+			log.Error().Msgf("Error sending log to Discord, payload: %s", message)
+		}
 		return
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusTooManyRequests && attempt < maxAttempts {
+		time.Sleep(delay)
+		sendToDiscord(message, attempt+1)
+		return
+	}
+
 	if resp.StatusCode != http.StatusNoContent {
-		fmt.Println("Error: non-200 status code received from Discord:", resp.Status)
+		if attempt < maxAttempts {
+			time.Sleep(delay)
+			sendToDiscord(message, attempt+1)
+		} else {
+			fmt.Println("Max retry attempts reached. Log will not be sent.")
+			log.Error().Msgf("Error sending log to Discord, payload: %s", message)
+		}
 	}
 }

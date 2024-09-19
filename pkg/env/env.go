@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -31,6 +32,7 @@ func InitializeEnv() {
 
 	err := godotenv.Load(".env")
 	if err != nil {
+		log.Error().Err(err).Msg("Error while loading .env file")
 		panic(err)
 	}
 

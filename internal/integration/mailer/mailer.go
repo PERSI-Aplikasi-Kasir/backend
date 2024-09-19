@@ -25,6 +25,8 @@ func InitializeMailer() {
 		From:   email,
 		Server: "smtp.gmail.com:587",
 	}
+
+	fmt.Println("✓ Mailer initialized")
 }
 
 func GetMailerInstance() *Config {

@@ -4,9 +4,13 @@ import (
 	"backend/database"
 	userController "backend/internal/module/user/controller"
 	"backend/pkg/logger"
+	"context"
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 var routerInstance *gin.Engine
@@ -36,4 +40,16 @@ func InitializeRoutes() {
 	userController.NewUserController(db).Register(router)
 
 	fmt.Println("✓ Inisialisasi", len(router.Routes()), "routes")
+}
+
+func UnsyncRouter(server *http.Server) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		log.Error().Err(err).Msg("Error while shutting down the server")
+		return
+	}
+
+	fmt.Println("✓ Router closed")
 }
