@@ -7,9 +7,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type EnvKey string
-
 var (
+	ENVIRONMENT       string
 	BEHost            string
 	BEPort            string
 	FEHost            string
@@ -35,6 +34,7 @@ func InitializeEnv() {
 		panic(err)
 	}
 
+	ENVIRONMENT = os.Getenv("ENVIRONMENT")
 	BEHost = os.Getenv("BE_HOST")
 	BEPort = os.Getenv("BE_PORT")
 	FEHost = os.Getenv("FE_HOST")
