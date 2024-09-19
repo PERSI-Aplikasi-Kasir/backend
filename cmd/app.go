@@ -19,8 +19,6 @@ import (
 func App() {
 	fmt.Println("Running app...")
 
-	logger.InitializeLogger("logs/app.log")
-
 	database.InitializeDB()
 	router.InitializeRouter()
 	router.InitializeRoutes()
@@ -37,8 +35,7 @@ func App() {
 		}
 	}()
 
-	log.Info().Msg("✓ App is running")
-
+	log.Info().Msgf("✓ App is running on %s:%s", env.BEHost, env.BEPort)
 	shutdownListener(server)
 }
 

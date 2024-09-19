@@ -64,5 +64,4 @@ func UnsyncDB() {
 
 	databaseInstance = nil
 	fmt.Println("✓ Database connection closed")
-
 }

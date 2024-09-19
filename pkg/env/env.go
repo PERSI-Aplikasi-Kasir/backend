@@ -9,15 +9,21 @@ import (
 )
 
 var (
-	ENVIRONMENT       string
-	BEHost            string
-	BEPort            string
-	FEHost            string
-	DBHost            string
-	DBPort            string
-	DBUser            string
-	DBPassword        string
-	DBName            string
+	ENVIRONMENT string
+
+	// server
+	BEHost string
+	BEPort string
+	FEHost string
+
+	// Database
+	DBHost     string
+	DBPort     string
+	DBUser     string
+	DBPassword string
+	DBName     string
+
+	// Services related
 	JWTSecretKey      string
 	UserAdminEmail    string
 	UserAdminPassword string
@@ -25,6 +31,10 @@ var (
 	MailerPassword    string
 	ResetPWFEEndpoint string
 	DiscordWebhookUrl string
+	LogsPath          string
+
+	// Microservices
+	LoggerPort string
 )
 
 func InitializeEnv() {
@@ -52,6 +62,8 @@ func InitializeEnv() {
 	MailerPassword = os.Getenv("MAILER_PASSWORD")
 	ResetPWFEEndpoint = os.Getenv("RESETPW_FE_ENDPOINT")
 	DiscordWebhookUrl = os.Getenv("DISCORD_WEBHOOK_URL")
+	LogsPath = os.Getenv("LOGS_PATH")
+	LoggerPort = os.Getenv("LOGGER_PORT")
 
 	fmt.Println("✓ .env initialized")
 }
