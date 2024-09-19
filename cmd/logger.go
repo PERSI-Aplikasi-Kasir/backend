@@ -15,7 +15,7 @@ import (
 func Logger() {
 	fmt.Println("Running microservice: logger")
 
-	http.HandleFunc("/logs", getLogs)
+	http.HandleFunc("/", getLogs)
 	fmt.Println(env.BEHost)
 	fmt.Println(env.LoggerPort)
 
