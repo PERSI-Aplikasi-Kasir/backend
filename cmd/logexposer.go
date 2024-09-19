@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func LogExpose() {
+func LogExposer() {
 	fmt.Println("Running microservice: LogExposer")
 
 	logexposer.InitializeLogExposer()

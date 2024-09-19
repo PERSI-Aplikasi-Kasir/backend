@@ -9,7 +9,7 @@ import (
 )
 
 func InitializeLogExposer() {
-	logFiles := GetLogFiles()
+	logFiles := getLogFiles()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

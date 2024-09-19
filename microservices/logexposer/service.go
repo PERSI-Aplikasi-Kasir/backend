@@ -1,22 +1,25 @@
 package logexposer
 
 import (
+	"backend/pkg/env"
 	"bufio"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
-type Logger struct {
+type LogExposer struct {
 	path string
 }
 
-func FilePath(path string) *Logger {
-	return &Logger{path: path}
+func FilePath(path string) *LogExposer {
+	return &LogExposer{path: path}
 }
 
-func (l *Logger) GetLogs(w http.ResponseWriter, r *http.Request) {
+func (l *LogExposer) GetLogs(w http.ResponseWriter, r *http.Request) {
 	logs, err := readLogs(l.path)
 	if err != nil {
 		http.Error(w, "Error reading logs", http.StatusInternalServerError)
@@ -87,4 +90,20 @@ func paginateLogs(logs []LogEntry, page, limit int) []LogEntry {
 	}
 
 	return logs[start:end]
+}
+
+func getLogFiles() *[]string {
+	files, err := os.ReadDir(env.LogsPath)
+	if err != nil {
+		log.Fatalf("Failed to read directory: %v", err)
+	}
+
+	var logFiles []string
+	for _, file := range files {
+		if filepath.Ext(file.Name()) == ".log" {
+			logFiles = append(logFiles, file.Name())
+		}
+	}
+
+	return &logFiles
 }

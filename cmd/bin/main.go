@@ -24,7 +24,7 @@ func main() {
 		cmd.Migrate()
 
 	case *runLogExposer:
-		cmd.LogExpose()
+		cmd.LogExposer()
 
 	default:
 		cmd.App()
