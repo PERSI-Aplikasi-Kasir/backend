@@ -14,15 +14,14 @@ logexposer:
 	cls
 	go run cmd/bin/main.go --logexposer
 
+
+# Server
 build:
 	go build -o dist/ ./cmd/bin
 
-start-win:
-	dist/bin.exe
-
-start-linux:
-	./dist/bin
+start:
+	./dist/bin --$(cmd)
 
 deploy:
-	go build -o dist/bin ./cmd/bin
+	go build -o dist/ ./cmd/bin
 	./dist/bin
