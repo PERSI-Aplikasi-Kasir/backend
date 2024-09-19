@@ -1,5 +1,0 @@
-{"level":"info","time":"13:19:17, 2024-09-19","caller":"C:/Users/Fanes/Desktop/YukiKasir/backend/cmd/app.go:40","message":"✓ App is running"}
-{"level":"error","time":"13:19:24, 2024-09-19","caller":"C:/Users/Fanes/Desktop/YukiKasir/backend/pkg/handler/error.go:29","message":"pengguna tidak ditemukan"}
-{"level":"info","time":"13:19:45, 2024-09-19","caller":"C:/Users/Fanes/Desktop/YukiKasir/backend/internal/module/user/service/service.go:32","message":"berhasil mendapatkan pengguna"}
-{"level":"error","time":"13:19:56, 2024-09-19","caller":"C:/Users/Fanes/Desktop/YukiKasir/backend/pkg/handler/error.go:29","message":"pengguna tidak ditemukan"}
-{"level":"info","time":"13:20:03, 2024-09-19","caller":"C:/Users/Fanes/Desktop/YukiKasir/backend/internal/module/user/service/service.go:32","message":"berhasil mendapatkan pengguna"}
