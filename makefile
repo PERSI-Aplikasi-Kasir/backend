@@ -10,9 +10,9 @@ seed:
 	cls
 	go run cmd/bin/main.go --seed
 
-logger:
+logexposer:
 	cls
-	go run cmd/bin/main.go --logger
+	go run cmd/bin/main.go --logexposer
 
 build:
 	go build -o dist/ ./cmd/bin
