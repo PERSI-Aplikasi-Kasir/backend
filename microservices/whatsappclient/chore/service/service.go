@@ -4,7 +4,9 @@ import (
 	"backend/common/utils"
 	"backend/microservices/whatsappclient/chore/entity"
 	"backend/microservices/whatsappclient/chore/interfaces"
+	"backend/microservices/whatsappclient/config"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -34,28 +36,48 @@ func (s *whatsappService) CheckDevice() (bool, error) {
 		return false, fmt.Errorf("client is not initialized")
 	}
 
-	return s.client.Store.ID != nil, nil
+	isIDStored := s.client.Store.ID != nil
+	isAutenticated := s.client.IsLoggedIn()
+
+	fmt.Println("isIDStored", isIDStored)
+	fmt.Println("isAutenticated", isAutenticated)
+
+	return isIDStored && isAutenticated, nil
 }
 
 func (s *whatsappService) GetLoginQR() (<-chan *[]byte, error) {
+	isLogin, err := s.CheckDevice()
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to check device")
+		return nil, err
+	}
+
+	if isLogin {
+		log.Info().Msg("Client is already logged in")
+		return nil, nil
+	}
+
 	if s.client != nil {
-		s.client.Disconnect()
+		config.ResyncClient(&s.client)
 	}
 
 	qrChan, err := s.client.GetQRChannel(context.Background())
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to get QR channel")
-		return nil, err
-	}
-
-	err = s.client.Connect()
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to connect to WhatsApp")
-		return nil, err
+		if errors.Is(err, whatsmeow.ErrQRStoreContainsID) {
+			_ = s.client.Connect()
+			if s.client.IsLoggedIn() {
+				log.Info().Msg("Client is already logged in")
+				return nil, nil
+			}
+			log.Error().Err(err).Msg("Failed to get QR channel")
+			return nil, err
+		} else {
+			log.Error().Err(err).Msg("Failed to get QR channel")
+			return nil, err
+		}
 	}
 
 	out := make(chan *[]byte)
-
 	go func() {
 		defer close(out)
 		for evt := range qrChan {
@@ -76,6 +98,12 @@ func (s *whatsappService) GetLoginQR() (<-chan *[]byte, error) {
 			}
 		}
 	}()
+
+	err = s.client.Connect()
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to sync client")
+		return nil, err
+	}
 
 	return out, nil
 }
@@ -141,4 +169,18 @@ func loadImage(imageName string) (*[]byte, error) {
 	}
 
 	return &byteData, nil
+}
+
+func (s *whatsappService) ResetLoggedDevice() error {
+	if s.client == nil {
+		log.Error().Msg("Client is not initialized")
+		return fmt.Errorf("client is not initialized")
+	}
+
+	s.client.Store.Container.DeleteDevice(s.client.Store)
+	s.client.Store.Delete()
+	s.client.Disconnect()
+
+	log.Info().Msg("Logged device has been reset")
+	return nil
 }

@@ -52,6 +52,7 @@ func shutdownListener(server *http.Server) {
 	database.UnsyncDB()
 	router.UnsyncRouter(server)
 	logger.UnsyncLogger()
+	config.UnsyncClient()
 
 	log.Info().Msg("✓ Server shutted down")
 }

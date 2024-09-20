@@ -50,3 +50,8 @@ func UnsyncDB() {
 	databaseInstance = nil
 	fmt.Println("✓ Database connection closed")
 }
+
+func ResyncDB() {
+	UnsyncDB()
+	InitializeWAClientDB()
+}

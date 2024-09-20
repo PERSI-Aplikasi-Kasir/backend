@@ -21,15 +21,53 @@ func InitializeClient() {
 
 	client = whatsmeow.NewClient(device, nil)
 
-	if err := client.Connect(); err != nil {
-		log.Error().Err(err).Msg("failed to connect to whatsapp")
-		client.Disconnect()
-		return
+	if client.Store.ID != nil {
+		if err := client.Connect(); err != nil {
+			log.Error().Err(err).Msg("failed to connect to whatsapp")
+			return
+		}
 	}
 
 	fmt.Println("✓ Client initialized")
 }
 
 func GetClient() *whatsmeow.Client {
+	if client == nil {
+		InitializeClient()
+	}
+
 	return client
+}
+
+func ResyncClient(callerClient **whatsmeow.Client) error {
+	if client.IsConnected() {
+		client.Disconnect()
+	}
+
+	if client != nil {
+		client = nil
+	}
+
+	InitializeClient()
+	if client == nil {
+		return fmt.Errorf("failed to reinitialize client")
+	}
+
+	*callerClient = client
+
+	if client.Store.ID != nil {
+		if err := client.Connect(); err != nil {
+			log.Error().Err(err).Msg("failed to connect to whatsapp")
+			return err
+		}
+	}
+	return nil
+}
+
+func UnsyncClient() {
+	if client != nil {
+		client.Disconnect()
+		client = nil
+		fmt.Println("✓ Client closed")
+	}
 }
