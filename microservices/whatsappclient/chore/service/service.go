@@ -8,8 +8,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/rs/zerolog/log"
 	"go.mau.fi/whatsmeow"
@@ -31,6 +29,7 @@ func NewWhatsappService(client *whatsmeow.Client) *whatsappService {
 }
 
 func (s *whatsappService) CheckDevice() (bool, error) {
+	s.client = config.GetClient()
 	if s.client == nil {
 		log.Error().Msg("Client is not initialized")
 		return false, fmt.Errorf("client is not initialized")
@@ -43,6 +42,7 @@ func (s *whatsappService) CheckDevice() (bool, error) {
 }
 
 func (s *whatsappService) GetLoginQR() (<-chan *[]byte, error) {
+	s.client = config.GetClient()
 	isLogin, err := s.CheckDevice()
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to check device")
@@ -106,6 +106,7 @@ func (s *whatsappService) GetLoginQR() (<-chan *[]byte, error) {
 }
 
 func (s *whatsappService) SendMessage(req *entity.MessageSend) error {
+	s.client = config.GetClient()
 	logged, err := s.CheckDevice()
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to check device")
@@ -122,7 +123,7 @@ func (s *whatsappService) SendMessage(req *entity.MessageSend) error {
 	if req.ImageID == "" {
 		message.Conversation = proto.String(req.Message)
 	} else {
-		byteData, err := loadImage(req.ImageID)
+		byteData, err := utils.LoadImage(req.ImageID)
 		if err != nil {
 			log.Error().Err(err).Msg("Failed to load image")
 			return err
@@ -151,24 +152,8 @@ func (s *whatsappService) SendMessage(req *entity.MessageSend) error {
 	return nil
 }
 
-func loadImage(imageName string) (*[]byte, error) {
-	file, err := os.Open(imageName)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to open image file")
-		return nil, err
-	}
-	defer file.Close()
-
-	byteData, err := io.ReadAll(file)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to read image file")
-		return nil, err
-	}
-
-	return &byteData, nil
-}
-
 func (s *whatsappService) ResetLoggedDevice() error {
+	s.client = config.GetClient()
 	if s.client == nil {
 		log.Error().Msg("Client is not initialized")
 		return fmt.Errorf("client is not initialized")

@@ -54,13 +54,6 @@ func ResyncClient(callerClient **whatsmeow.Client) error {
 	}
 
 	*callerClient = client
-
-	if client.Store.ID != nil {
-		if err := client.Connect(); err != nil {
-			log.Error().Err(err).Msg("failed to connect to whatsapp")
-			return err
-		}
-	}
 	return nil
 }
 
