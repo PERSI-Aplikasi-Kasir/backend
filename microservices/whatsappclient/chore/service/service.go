@@ -39,9 +39,6 @@ func (s *whatsappService) CheckDevice() (bool, error) {
 	isIDStored := s.client.Store.ID != nil
 	isAutenticated := s.client.IsLoggedIn()
 
-	fmt.Println("isIDStored", isIDStored)
-	fmt.Println("isAutenticated", isAutenticated)
-
 	return isIDStored && isAutenticated, nil
 }
 

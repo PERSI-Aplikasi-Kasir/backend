@@ -24,7 +24,7 @@ var (
 	DBName     string
 
 	// Services related
-	JWTSecretKey      string
+	APIKey            string
 	UserAdminEmail    string
 	UserAdminPassword string
 	MailerEmail       string
@@ -57,7 +57,7 @@ func InitializeEnv() {
 	DBUser = os.Getenv("DB_USER")
 	DBPassword = os.Getenv("DB_PASSWORD")
 	DBName = os.Getenv("DB_NAME")
-	JWTSecretKey = os.Getenv("JWT_SECRET_KEY")
+	APIKey = os.Getenv("API_KEY")
 	UserAdminEmail = os.Getenv("USER_ADMIN_EMAIL")
 	UserAdminPassword = os.Getenv("USER_ADMIN_PASSWORD")
 	MailerEmail = os.Getenv("MAILER_EMAIL")

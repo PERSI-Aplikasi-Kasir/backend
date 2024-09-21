@@ -1,8 +1,6 @@
 package router
 
 import (
-	"backend/microservices/whatsappclient/chore/controller"
-	"backend/microservices/whatsappclient/config"
 	"backend/pkg/logger"
 	"context"
 	"fmt"
@@ -21,6 +19,7 @@ func InitializeRouter() {
 	router.Use(corsHeaderConfig())
 	router.Use(corsConfig())
 	router.Use(rateLimiterConfig())
+	// TODO: discord logger not working in this microservice
 	router.Use(logger.DiscordLogger())
 
 	routerInstance = router
@@ -30,16 +29,6 @@ func InitializeRouter() {
 
 func GetRouterInstance() *gin.Engine {
 	return routerInstance
-}
-
-func InitializeRoutes() {
-	fmt.Println("===== Initialize Routes =====")
-	router := GetRouterInstance()
-	client := config.GetClient()
-
-	controller.NewWhatsappController(client).Register(router)
-
-	fmt.Println("✓ Initialize", len(router.Routes()), "routes")
 }
 
 func UnsyncRouter(server *http.Server) {
