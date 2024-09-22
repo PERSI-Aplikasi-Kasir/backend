@@ -9,8 +9,9 @@ func InitializeRoutes() {
 	fmt.Println("===== Initialize Routes =====")
 	router := GetRouterInstance()
 
-	whatsappController.NewWhatsappController().Register(router)
-	whatsappController.NewWhatsappController().RegisterStream(router)
+	whatsappController := whatsappController.NewWhatsappController()
+	whatsappController.Register(router)
+	whatsappController.RegisterStream(router)
 
 	fmt.Println("✓ Initialize", len(router.Routes()), "routes")
 }

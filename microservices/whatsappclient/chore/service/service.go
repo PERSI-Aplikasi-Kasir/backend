@@ -29,7 +29,6 @@ func NewWhatsappService(client *whatsmeow.Client) *whatsappService {
 }
 
 func (s *whatsappService) CheckDevice() (bool, error) {
-	s.client = config.GetClient()
 	if s.client == nil {
 		log.Error().Msg("Client is not initialized")
 		return false, fmt.Errorf("client is not initialized")
@@ -42,7 +41,6 @@ func (s *whatsappService) CheckDevice() (bool, error) {
 }
 
 func (s *whatsappService) GetLoginQR() (<-chan *[]byte, error) {
-	s.client = config.GetClient()
 	isLogin, err := s.CheckDevice()
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to check device")
@@ -106,7 +104,6 @@ func (s *whatsappService) GetLoginQR() (<-chan *[]byte, error) {
 }
 
 func (s *whatsappService) SendMessage(req *entity.MessageSend) error {
-	s.client = config.GetClient()
 	logged, err := s.CheckDevice()
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to check device")
@@ -153,7 +150,6 @@ func (s *whatsappService) SendMessage(req *entity.MessageSend) error {
 }
 
 func (s *whatsappService) ResetLoggedDevice() error {
-	s.client = config.GetClient()
 	if s.client == nil {
 		log.Error().Msg("Client is not initialized")
 		return fmt.Errorf("client is not initialized")
